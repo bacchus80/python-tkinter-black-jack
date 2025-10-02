@@ -36,24 +36,35 @@ class BlackjackBoard:
 
         self.label_dealer = tk.Label(root, text=TEXT['dealer'])
         self.label_dealer.pack()
-        self.label_dealer_hand = tk.Label(root, text="")
-        self.label_dealer_hand.pack()
+
+        # Frame to hold the cards of the dealer
+        self.dealer_cards_frame = tk.Frame(root)
+        self.dealer_cards_frame.pack()
 
         self.label_spacer = tk.Label(root, text="")
         self.label_spacer.pack(pady=0)
 
         self.label_player = tk.Label(root, text=TEXT['player'])
         self.label_player.pack()
-        self.label_player_hand = tk.Label(root, text="")
-        self.label_player_hand.pack()
+
+        # Frame to hold the cards of the player
+        self.player_cards_frame = tk.Frame(root)
+        self.player_cards_frame.pack(pady=2)
+
+        # Keep references to PhotoImage objects to avoid garbage collection
+        self.player_card_photos = []
+        self.dealer_card_photos = []
 
         # Game buttons
         self.button_frame = tk.Frame(root)
         self.button_frame.pack(pady=16)
+
         self.button_hit = tk.Button(self.button_frame, text=TEXT['hit'], command=self.player_hit)
         self.button_hit.grid(row=0, column=0, padx=2)
+
         self.button_stand = tk.Button(self.button_frame, text=TEXT['stand'], command=self.player_stand)
         self.button_stand.grid(row=0, column=1, padx=2)
+
         self.button_reset = tk.Button(self.button_frame, text=TEXT['new_game'], command=self.start_game)
         self.button_reset.grid(row=0, column=2)
 
@@ -103,23 +114,55 @@ class BlackjackBoard:
     def update_gui(self, firstDeal=False):
         """
         Updates the GUI with total sum and the cards for current round
+        When firstDeal is True, dealers second card is turned faced down
         """
         sum_player_hand =  str(self.deck_of_cards.calculate_hand(self.player_hand))
         sum_dealer_hand =  str(self.deck_of_cards.calculate_hand(self.dealer_hand))
 
+        # Clear any existing card images
+        for widget in self.dealer_cards_frame.winfo_children():
+            widget.destroy()
+
+        self.dealer_card_photos = []
+
         if firstDeal:
             dealer_display = TEXT['dealer']
-            dealer_display_hand = f"{self.dealer_hand[0]}  [?]"
+            # Add dealers first card
+            card_image = self.deck_of_cards.get_card_face(self.dealer_hand[0])
+            self.dealer_card_photos.append(card_image)
+            card_label = tk.Label(self.dealer_cards_frame, image=card_image)
+            card_label.pack(side=tk.LEFT, padx=CARD_SPACING)
+
+            # Add a faced down card for dealers second card
+            card_faced_down = self.deck_of_cards.get_card_faced_down()
+            self.dealer_card_photos.append(card_faced_down)
+            card_label = tk.Label(self.dealer_cards_frame, image=card_faced_down)
+            card_label.pack(side=tk.LEFT, padx=CARD_SPACING)
         else:
             dealer_display = self.get_total_sum_text(TEXT['dealer'], sum_dealer_hand)
-            dealer_display_hand = self.format_hand_for_display(self.dealer_hand)
+
+            for card in self.dealer_hand:
+                card_image = self.deck_of_cards.get_card_face(card)
+                self.dealer_card_photos.append(card_image)
+                card_label = tk.Label(self.dealer_cards_frame, image=card_image)
+                card_label.pack(side=tk.LEFT, padx=CARD_SPACING)
 
         self.label_dealer.config(text=dealer_display)
-        self.label_dealer_hand.config(text=dealer_display_hand)
 
         player_display = self.get_total_sum_text(TEXT['player'], sum_player_hand)
         self.label_player.config(text=player_display)
-        self.label_player_hand.config(text=self.format_hand_for_display(self.player_hand))
+
+        # Clear any existing card images
+        for widget in self.player_cards_frame.winfo_children():
+           widget.destroy()
+
+        # Build fresh PhotoImages for player's hand and display them
+        self.player_card_photos = []
+        for card in self.player_hand:
+            card_image = self.deck_of_cards.get_card_face(card)
+            self.player_card_photos.append(card_image)
+            card_label = tk.Label(self.player_cards_frame, image=card_image)
+            card_label.pack(side=tk.LEFT, padx=CARD_SPACING)
 
     def player_stand(self):
         """
@@ -139,13 +182,13 @@ class BlackjackBoard:
 
         while self.deck_of_cards.calculate_hand(self.dealer_hand) < 17:
             self.dealer_hand += self.deck_of_cards.draw(1)
+            self.update_gui(firstDeal=False)
 
             # Force GUI to refresh
             self.root.update_idletasks()
             self.root.update()
 
-            self.update_gui(firstDeal=False)
-            self.check_winner()
+            #self.check_winner()
             sleep(1)
 
         self.check_winner()
@@ -160,9 +203,9 @@ class BlackjackBoard:
         if value_dealer_hand > self.MAX_VALUE:
             self.game_ended(TEXT['dealer_busted'])
         elif value_player_hand > value_dealer_hand:
-           self.game_ended(TEXT['you_win'])
+            self.game_ended(TEXT['you_win'])
         elif value_player_hand < value_dealer_hand:
-           self.game_ended(TEXT['dealer_wins'])
+            self.game_ended(TEXT['dealer_wins'])
         else:
             self.game_ended(TEXT['tie'])
 

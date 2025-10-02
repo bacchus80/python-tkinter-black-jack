@@ -5,10 +5,10 @@ def main():
     root = tk.Tk()
     root = root
     root.title("Black Jack")
-    root.geometry("600x400")
+    root.geometry("800x600")
 
-    app = BlackjackBoard(root)
-    app.start_game()
+    game = BlackjackBoard(root)
+    game.start_game()
 
     root.mainloop()
 
