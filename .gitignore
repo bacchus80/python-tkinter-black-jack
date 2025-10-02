@@ -1,0 +1,9 @@
+*.pyc
+__pychace__/
+
+# Virtual environments
+venv
+
+# OS files
+.DS_Store
+Thumbs.db
