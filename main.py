@@ -5,7 +5,7 @@ def main():
     root = tk.Tk()
     root = root
     root.title("Black Jack")
-    root.geometry("800x600")
+    root.geometry("800x560")
 
     game = BlackjackBoard(root)
     game.start_game()

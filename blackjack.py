@@ -1,27 +1,30 @@
 import tkinter as tk
 from time import sleep
 from cards import Deck
+from scoreboard import ScoreBoard
 
 # For coherent card spacing
 CARD_SPACING = 2
 
 TEXT = {
-    "dealer": "Dealer",
-    "player": "Player",
-    "total": "Total",
-    "dealer_busted": "Dealer busted. You win!",
-    "you_win": "You win!",
-    "dealer_wins": "Dealer wins",
-    "tie": "Tie",
-    "hit_or_stand": "Hit or stand",
-    "your_busted_game_over": "Your busted, game over",
-    "hit": "Hit",
-    "stand": "Stand",
-    "new_game": "New game"
+    'dealer': 'Dealer',
+    'player': 'Player',
+    'total': 'Total',
+    'dealer_busted': 'Dealer busted. You win!',
+    'you_win': 'You win!',
+    'dealer_wins': 'Dealer wins',
+    'tie': 'Tie',
+    'hit_or_stand': 'Hit or stand',
+    'your_busted_game_over': 'Your busted, game over',
+    'hit': 'Hit',
+    'stand': 'Stand',
+    'new_game': 'New game'
 }
 
-# Back Jack game board
 class BlackjackBoard:
+    """
+    A Black Jack board
+    """
     def __init__(self, root):
         self.root = root
         self.MAX_VALUE = 21
@@ -32,7 +35,9 @@ class BlackjackBoard:
 
         # Setting up GUI
         self.status_header_text = tk.Label(root,text="", font=("Helvetica, Arial", 28) )
-        self.status_header_text.pack(pady=24)
+        self.status_header_text.pack(pady=16)
+
+        self.scoreboard = ScoreBoard(root)
 
         self.label_dealer = tk.Label(root, text=TEXT['dealer'])
         self.label_dealer.pack()
@@ -95,6 +100,7 @@ class BlackjackBoard:
 
         sum_player_hand = self.deck_of_cards.calculate_hand(self.player_hand)
         if sum_player_hand > self.MAX_VALUE:
+            self.scoreboard.update_score_player_loses()
             self.game_ended(TEXT['your_busted_game_over'])
 
     def game_ended(self, status_text):
@@ -201,12 +207,16 @@ class BlackjackBoard:
         value_dealer_hand = self.deck_of_cards.calculate_hand(self.dealer_hand)
 
         if value_dealer_hand > self.MAX_VALUE:
+            self.scoreboard.update_score_player_wins()
             self.game_ended(TEXT['dealer_busted'])
         elif value_player_hand > value_dealer_hand:
+            self.scoreboard.update_score_player_wins()
             self.game_ended(TEXT['you_win'])
         elif value_player_hand < value_dealer_hand:
+            self.scoreboard.update_score_player_loses()
             self.game_ended(TEXT['dealer_wins'])
         else:
+            self.scoreboard.update_score_tie()
             self.game_ended(TEXT['tie'])
 
     def get_total_sum_text(self, player_name, sum_hand):

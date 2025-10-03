@@ -18,7 +18,7 @@ Creating a Blackjack game in Python with Tkinter between a player and a computer
 
 ## Screenshots
 
-![Blackjack](assets/screenshot.png)
+![Blackjack](assets/screenshoot.png)
 
 ---
 
