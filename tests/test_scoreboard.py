@@ -1,13 +1,14 @@
 import unittest
-import tkinter as tk
+from unittest.mock import patch
 from blackjack_board.scoreboard import ScoreBoard
 
 class TestScoreboard(unittest.TestCase):
 
-  def setUp(self):
-    root = tk.Tk()
+  @patch("tkinter.Tk")
+  def setUp(self, MockTk):
+    # Mock window
+    root = MockTk()
     self.score_board = ScoreBoard(root)
-    return super().setUp()
 
   def test_initial_scores(self):
     self.assertEqual(self.score_board.nr_of_losses, 0)
