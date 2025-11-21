@@ -14,16 +14,15 @@ class TestScoreboard(unittest.TestCase):
     self.assertEqual(self.score_board.nr_of_ties, 0)
     self.assertEqual(self.score_board.nr_of_wins, 0)
 
-  def test_update_scores(self):
-    # player wins
+  def test_update_player_wins(self):
     self.score_board.update_score_player_wins()
     self.assertEqual(self.score_board.nr_of_wins, 1)
 
-    # dealer wins
+  def test_update_dealer_wins(self):
     self.score_board.update_score_player_loses()
     self.assertEqual(self.score_board.nr_of_losses, 1)
 
-    # tie
+  def test_update_tie(self):
     self.score_board.update_score_tie()
     self.assertEqual(self.score_board.nr_of_ties, 1)
 
