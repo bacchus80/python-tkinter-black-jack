@@ -1,6 +1,6 @@
 # python-tkinter-black-jack
 
-Creating a Blackjack game in Python with Tkinter between a player and a computer.
+A Blackjack game in Python with Tkinter between a player and a computer.
 
 ---
 
@@ -18,7 +18,7 @@ Creating a Blackjack game in Python with Tkinter between a player and a computer
 
 ## Screenshots
 
-![Blackjack](assets/screenshoot-v2.png)
+![Blackjack](assets/screenshoot.png)
 
 ---
 
@@ -37,5 +37,7 @@ pip install -r requirements.txt
 ---
 
 ## Usage
-
 Run the project: `python main.py` or `python3 main.py`
+
+## Testing
+Run tests from the root folder with `python -m unittest discover`

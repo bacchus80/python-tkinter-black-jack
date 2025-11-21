@@ -1,24 +1,15 @@
 # Imaging Library for displaying cards
 from PIL import ImageTk, Image
 import random
+from blackjack_board.card import Card
 
 DRESSED_CARDS = {
-    'ace': 'Ace',
-    'jack': 'Jack',
-    'queen': 'Queen',
-    'king': 'King',
+    'Ace': 'Ace',
+    'Jack': 'Jack',
+    'Queen': 'Queen',
+    'King': 'King',
 }
 
-class Card:
-    """
-    A playing card, a suit and rank (value)
-    """
-    def __init__(self, suit, rank):
-        self.suit = suit
-        self.rank = rank
-    
-    def __repr__(self):
-        return f'{self.rank} of {self.suit}'
 
 class Deck:
     """
@@ -28,12 +19,12 @@ class Deck:
     # Image variables
     card_dimension = [109, 160] # size for one card in a image [width, height] 
     cards_path = 'assets/cards.png'
-    card_faced_down_path = 'assets/card-back.png'
+    card_fAced_down_path = 'assets/card-back.png'
 
     # order suits and rank matching image with cards
     suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'] 
-    ranks = [DRESSED_CARDS['ace'],'2', '3', '4', '5', '6', '7', '8', '9', '10',
-             DRESSED_CARDS['jack'], DRESSED_CARDS['queen'], DRESSED_CARDS['king']]
+    ranks = [DRESSED_CARDS['Ace'],'2', '3', '4', '5', '6', '7', '8', '9', '10',
+             DRESSED_CARDS['Jack'], DRESSED_CARDS['Queen'], DRESSED_CARDS['King']]
 
     def __init__(self):
         self.cards = [Card(suit, rank) for suit in self.suits for rank in self.ranks]
@@ -55,29 +46,21 @@ class Deck:
     
     def calculate_hand(self, hand):
         """
-        Calculate value of the hand for Black jack
+        Calculate value of the hand for Black Jack
         """
         value = 0
-        aces = 0
-
-        card_values = {
-            '2': 2, '3': 3, '4': 4, '5': 5, '6':6, '7': 7,
-            '8':8, '9': 9, '10': 10, 
-            DRESSED_CARDS['jack']: 10, 
-            DRESSED_CARDS['queen']: 10, 
-            DRESSED_CARDS['king']: 10
-        }
+        Aces = 0
 
         for card in hand:
-            if card.rank == DRESSED_CARDS['ace']:
-                aces += 1
+            if card.rank == DRESSED_CARDS['Ace']:
+                Aces += 1
                 value += 11
             else:
-                value += card_values.get(card.rank, 1)
+                value += card.value()
 
-        while value > 21 and aces > 0:
+        while value > 21 and Aces > 0:
             value -= 10
-            aces -= 1
+            Aces -= 1
 
         return value
 
@@ -103,6 +86,6 @@ class Deck:
 
     def get_card_faced_down(self):
       """
-      Get image of a card faced down (for dealer)
+      Get image of a card fAced down (for dealer)
       """
-      return ImageTk.PhotoImage(Image.open(self.card_faced_down_path))
+      return ImageTk.PhotoImage(Image.open(self.card_fAced_down_path))

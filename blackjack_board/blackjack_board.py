@@ -1,7 +1,7 @@
 import tkinter as tk
 from time import sleep
-from cards import Deck
-from scoreboard import ScoreBoard
+from blackjack_board.deck import Deck
+from blackjack_board.scoreboard import ScoreBoard
 
 # For coherent card spacing
 CARD_SPACING = 2

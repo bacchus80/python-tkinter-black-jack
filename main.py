@@ -1,5 +1,5 @@
 import tkinter as tk
-from blackjack import BlackjackBoard
+from blackjack_board.blackjack_board import BlackjackBoard
 
 def main():
     root = tk.Tk()
