@@ -26,7 +26,6 @@ class TestCard(unittest.TestCase):
       card = Card("Clubs", "Jack")
       self.assertEqual(str(card), "Jack of Clubs")
 
-
   
 if __name__ == '__main__':
     unittest.main()
